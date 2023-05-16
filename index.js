@@ -1,13 +1,23 @@
-const { createStore } = require("redux");
+const { createStore, combineReducers } = require("redux");
 
-//Const define
+//Product Const define
 const GETPRODUCTS = "GETPRODUCTS";
 const ADDPRODUCTS = "ADDPRODUCTS";
 
-//initial state define
+//Cart const define
+const GETCART = "GETCARD";
+const ADDCART = "ADDCARD";
+
+//Product initial state define
 const productsInitialState = {
   products: ["Pen", "Mobile"],
   numberOfProduct: 2,
+};
+
+//Cart initial state
+const cartInitialState = {
+  cartItem: ["Mobile"],
+  cartProduct: 1,
 };
 
 //products action
@@ -20,6 +30,21 @@ const getProducts = () => {
 const addProduct = (value) => {
   return {
     type: ADDPRODUCTS,
+    payload: value,
+  };
+};
+
+//card Action
+
+const getCardItems = () => {
+  return {
+    type: GETCART,
+  };
+};
+
+const addCart = (value) => {
+  return {
+    type: ADDCART,
     payload: value,
   };
 };
@@ -41,7 +66,32 @@ const productReducer = (state = productsInitialState, action) => {
   }
 };
 
-const state = createStore(productReducer);
+//cart reducer
+const cartReducer = (state = cartInitialState, action) => {
+  switch (action.type) {
+    case GETCART: {
+      return {
+        ...state,
+      };
+    }
+    case ADDCART: {
+      return {
+        cartItem: [...state.cartItem, action.payload],
+        cartProduct: state.cartProduct + 1,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
+const combineReducer = combineReducers({
+  product: productReducer,
+  cart: cartReducer,
+});
+
+const state = createStore(combineReducer);
 
 state.subscribe(() => {
   console.log(state.getState());
@@ -49,3 +99,5 @@ state.subscribe(() => {
 
 state.dispatch(getProducts());
 state.dispatch(addProduct("LP"));
+
+state.dispatch(addCart("Toy"));
