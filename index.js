@@ -1,4 +1,6 @@
-const { createStore, combineReducers } = require("redux");
+const { createStore, combineReducers, applyMiddleware } = require("redux");
+//Logger with default options
+const { logger } = require("redux-logger");
 
 //Product Const define
 const GETPRODUCTS = "GETPRODUCTS";
@@ -91,7 +93,7 @@ const combineReducer = combineReducers({
   cart: cartReducer,
 });
 
-const state = createStore(combineReducer);
+const state = createStore(combineReducer, applyMiddleware(logger));
 
 state.subscribe(() => {
   console.log(state.getState());
